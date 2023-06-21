@@ -205,9 +205,13 @@ export class InvidiousService extends SearchService<InvidiousEntity> {
         return hostCache
       }
 
-      const { invidiousCacheTtl } = this.configService.get<CacheConfig>('cache')
+      const cacheSettings = this.configService.get<CacheConfig>('cache')
       const hostEntity = await this.invidiousRepository.findOne({ where: { index } })
-      await this.cacheManager.set(getInvidiousСompositeCacheKey(`index-${index}`), hostEntity, invidiousCacheTtl)
+      await this.cacheManager.set(
+        getInvidiousСompositeCacheKey(`index-${index}`),
+        hostEntity,
+        cacheSettings.invidiousCacheTtl
+      )
 
       return hostEntity
     } catch (e) {

@@ -53,8 +53,6 @@ export class InvidiousParserService {
       } catch (e) {
         if (isAxiosError(e)) {
           await this.onErrorHost(invidious, e)
-        } else {
-          throw new InternalServerErrorException(e)
         }
       }
     }
@@ -78,7 +76,7 @@ export class InvidiousParserService {
       const axiosInstance = createInvidiousAxios(invidious.host, useragent, settings.timeout, proxy)
 
       try {
-        const { data, status } = await axiosInstance.get('/feed/trending')
+        const { data, status } = await axiosInstance.get('/feed/trending', { timeout: 5000 })
         const isWorkable = status === HttpStatus.OK
         if (!isWorkable) {
           await this.invidiousService.update(invidious.id, { isWorkable })
@@ -87,8 +85,6 @@ export class InvidiousParserService {
       } catch (e) {
         if (isAxiosError(e)) {
           await this.onErrorHost(invidious, e)
-        } else {
-          throw new InternalServerErrorException(e)
         }
       }
     }
@@ -122,8 +118,6 @@ export class InvidiousParserService {
       } catch (e) {
         if (isAxiosError(e)) {
           await this.onErrorHost(invidious, e)
-        } else {
-          throw new InternalServerErrorException(e)
         }
       }
     }
@@ -173,8 +167,6 @@ export class InvidiousParserService {
       } catch (e) {
         if (isAxiosError(e)) {
           await this.onErrorHost(invidious, e)
-        } else {
-          throw new InternalServerErrorException(e)
         }
       }
     }
@@ -292,7 +284,7 @@ export class InvidiousParserService {
 
       const useragent = await this.getUseragent(invidious)
       const axiosInstance = createInvidiousAxios(invidious.host, useragent, settings.timeout, proxy)
-      const response = await axiosInstance.get('/feed/trending')
+      const response = await axiosInstance.get('/feed/trending', { timeout: settings.timeout })
       const requestDuration = Number(response.headers['request-duration'])
       const isWorkable = response.status === HttpStatus.OK
       return await this.invidiousService.updateHostState(invidious, isWorkable, requestDuration)

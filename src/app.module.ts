@@ -4,7 +4,7 @@ import * as Joi from 'joi'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { baseUser, databaseConfig, serverConfig, settingsConfig, tokensConfig } from './config'
+import { baseUser, cacheConfig, databaseConfig, serverConfig, settingsConfig, tokensConfig } from './config'
 import { DatabaseModule } from './modules/database/database.module'
 import { InvidiousParserModule } from './modules/invidious-parser/invidious-parser.module'
 import { InvidiousModule } from './modules/invidious/invidious.module'
@@ -23,7 +23,7 @@ const ENV = process.env.NODE_ENV
   imports: [
     ConfigModule.forRoot({
       envFilePath: !ENV ? '.env.dev' : `.env.${ENV}`,
-      load: [databaseConfig, serverConfig, settingsConfig, tokensConfig, baseUser],
+      load: [databaseConfig, serverConfig, settingsConfig, tokensConfig, baseUser, cacheConfig],
       validationSchema: Joi.object({
         NODE_ENV: Joi.string().valid('dev', 'prod').default('dev'),
         PORT: Joi.number().default(5000),

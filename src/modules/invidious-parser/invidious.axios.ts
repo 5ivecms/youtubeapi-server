@@ -9,12 +9,15 @@ export const createInvidiousAxios = (
   timeout: number = 5000,
   proxy?: ProxyEntity
 ) => {
-  const httpsAgent = proxy ? new HttpsProxyAgent(createProxyUri(proxy)) : undefined
+  const headers = { 'Content-Type': 'application/json', referer: '', 'User-agent': useragent }
+
+  const httpsAgent = proxy ? new HttpsProxyAgent(createProxyUri(proxy), { timeout, headers }) : undefined
+
   const instance = axios.create({
     baseURL,
     timeout,
     httpsAgent,
-    headers: { 'Content-Type': 'application/json', referer: '', 'User-agent': useragent },
+    headers,
   })
 
   instance.interceptors.request.use((config) => {
